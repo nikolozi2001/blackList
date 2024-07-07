@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ხელოსნების შავი სია{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/reset.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/output.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/fonts.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/responsive.css') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="../static/images/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+</head>
+
+<body>
+    <header class="header">
+        <nav>
+            <div class="logo">
+                <a href="/"><img class="main_logo" src="../static/images/logo.png" alt="ლოგო"> ხელოსნების შავი სია</a>
+            </div>
+            <input type="checkbox" id="menu-toggle">
+            <label for="menu-toggle" class="menu-icon">&#9776;</label>
+            <ul class="menu">
+                {% for item in navigation_items %}
+                <li><a href="{{ item.url }}">{{ item.label }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+    </header>
+
+    {% block content %}
+    <!-- content -->
+    {% endblock %}
+
+    <!-- footer -->
+    {% block footer %}
+    {% include "footer.html" %}
+    {% endblock %}
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>

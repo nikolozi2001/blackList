@@ -9,18 +9,25 @@ db = SQLAlchemy()
 
 # Configure the database URI
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(10), unique=False, nullable=False)
     surname = db.Column(db.String(30), unique=False, nullable=False)
-    personalid = db.Column(db.Integer(11), unique=True, nullable=True)
 
     def __repr__(self):
-        return f"Users('{self.name}', '{self.surname}', '{self.personalid}')"
+        return f"Users('{self.name}', '{self.surname}')"
 
+
+class Posts(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), unique=False, nullable=False)
+    content = db.Column(db.String(1000), unique=False, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    def __repr__(self):
+        return f"Posts('{self.title}', '{self.content}')"
 
 users = {
     'admin': 'admin',

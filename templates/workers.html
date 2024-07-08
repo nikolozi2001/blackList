@@ -2,6 +2,39 @@
 
 {% block content %}
 
-<h1>ხელოსნები</h1>
+<div class="container mx-auto p-4">
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+            <thead>
+                <tr class="bg-gray-200 text-gray-700">
+                    <th class="px-4 py-2 border-b">Name</th>
+                    <th class="px-4 py-2 border-b">Surname</th>
+                    <th class="px-4 py-2 border-b">Title</th>
+                    <th class="px-4 py-2 border-b">Content</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="hover:bg-gray-100">
+                    <td class="px-4 py-2 border-b">Malkhazi</td>
+                    <td class="px-4 py-2 border-b">Metlakhi</td>
+                    <td class="px-4 py-2 border-b">Aperist</td>
+                    <td class="px-4 py-2 border-b">Photo</td>
+                </tr>
+                <tr class="hover:bg-gray-100">
+                    <td class="px-4 py-2 border-b">Kapelchik</td>
+                    <td class="px-4 py-2 border-b">The Eagles</td>
+                    <td class="px-4 py-2 border-b">1972</td>
+                    <td class="px-4 py-2 border-b">1972</td>
+                </tr>
+                <tr class="hover:bg-gray-100">
+                    <td class="px-4 py-2 border-b">Shining Star</td>
+                    <td class="px-4 py-2 border-b">Earth, Wind, and Fire</td>
+                    <td class="px-4 py-2 border-b">1975</td>
+                    <td class="px-4 py-2 border-b">1975</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 {% endblock %}

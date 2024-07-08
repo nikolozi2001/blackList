@@ -1,10 +1,29 @@
 from flask import Flask, render_template, request, redirect, url_for
 from config import navigation_items
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
+
+db = SQLAlchemy()
+
+# Configure the database URI
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)
+
+class Users(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(10), unique=False, nullable=False)
+    surname = db.Column(db.String(30), unique=False, nullable=False)
+    personalid = db.Column(db.Integer(11), unique=True, nullable=True)
+
+    def __repr__(self):
+        return f"Users('{self.name}', '{self.surname}', '{self.personalid}')"
+
+
 users = {
-    'user1': 'password1',
+    'admin': 'admin',
     'nikakachibaia': 'general126'
 }
 
@@ -17,6 +36,11 @@ def home():
 @app.route("/about")
 def about():
     return render_template("about.html", navigation_items=navigation_items)
+
+
+@app.route("/workers")
+def workers():
+    return render_template("workers.html", navigation_items=navigation_items)
 
 
 @app.route('/login', methods=['GET', 'POST'])

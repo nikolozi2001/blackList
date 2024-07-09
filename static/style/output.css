@@ -1,5 +1,5 @@
 /*
-! tailwindcss v3.4.4 | MIT License | https://tailwindcss.com
+! tailwindcss v3.4.3 | MIT License | https://tailwindcss.com
 */
 
 /*
@@ -607,10 +607,6 @@ video {
 
 .min-w-full {
   min-width: 100%;
-}
-
-.table-auto {
-  table-layout: auto;
 }
 
 .overflow-x-auto {

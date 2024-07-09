@@ -4,21 +4,34 @@
 
 {% block content %}
 
-<!-- register.html -->
+{% if form.name.errors %}
+<ul class="errors">
+    {% for error in form.name.errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 <div class="container mx-auto">
     <h2 class="text-center">რეგისტრაცია</h2>
     <form action="{{ url_for('register') }}" method="post">
-        <label for="name">სახელი:</label>
-        <input type="text" id="name" name="name" required><br><br>
-        <label for="surname">გვარი:</label>
-        <input type="text" id="surname" name="surname" required><br><br>
-        <label for="username">მომხმარებლის სახელი:</label>
-        <input type="text" id="username" name="username" required><br><br>
-        <label for="password">პაროლი:</label>
-        <input type="password" id="password" name="password" required><br><br>
-        <label for="confirm_password">დაადასტურეთ პაროლი:</label>
-        <input type="password" id="confirm_password" name="confirm_password" required><br><br>
-        <input type="submit" value="რეგისტრაცია">
+        {{ form.hidden_tag() }}
+        <label for="name">{{ form.name.label.text }}:</label>
+        {{ form.name(class="form-control") }}
+
+        <label for="surname">{{ form.surname.label.text }}:</label>
+        {{ form.surname(class="form-control") }}
+
+        <label for="username">{{ form.username.label.text }}:</label>
+        {{ form.username(class="form-control") }}
+
+        <label for="password">{{ form.password.label.text }}:</label>
+        {{ form.password(class="form-control") }}
+
+        <label for="confirm_password">{{ form.confirm_password.label.text }}:</label>
+        {{ form.confirm_password(class="form-control") }}
+
+        <input type="submit" value="{{ form.submit.label.text }}" class="btn-primary">
     </form>
     <p class="text-center pb-3">უკვე გაქვს ანგარიში? <a href="{{ url_for('login') }}">შესვლა</a></p>
 </div>

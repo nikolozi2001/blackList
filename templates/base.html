@@ -12,7 +12,6 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style/responsive.css') }}">
     <link rel="shortcut icon" type="image/x-icon" href="../static/images/logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-
 </head>
 
 <body>
@@ -27,9 +26,30 @@
                 {% for item in navigation_items %}
                 <li><a href="{{ item.url }}">{{ item.label }}</a></li>
                 {% endfor %}
+
+                {% if not session.username %}
+                <li><a href="{{ url_for('login') }}">შესვლა</a></li>
+                <li><a href="{{ url_for('register') }}">რეგისტრაცია</a></li>
+                {% else %}
+                <li><a href="{{ url_for('logout') }}">გამოსვლა</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-messages space-y-4">
+        {% for category, message in messages %}
+        <div
+            class="alert alert-{{ category }} p-4 rounded shadow-md 
+            {% if category == 'success' %} bg-green-100 text-green-800 {% elif category == 'danger' %} bg-red-100 text-red-800 {% elif category == 'warning' %} bg-yellow-100 text-yellow-800 {% else %} bg-blue-100 text-blue-800 {% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
 
     {% block content %}
     <!-- content -->

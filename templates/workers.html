@@ -7,31 +7,21 @@
         <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
             <thead>
                 <tr class="bg-gray-200 text-gray-700">
-                    <th class="px-4 py-2 border-b text-left">Name</th>
-                    <th class="px-4 py-2 border-b text-left">Surname</th>
-                    <th class="px-4 py-2 border-b text-left">Title</th>
-                    <th class="px-4 py-2 border-b text-left">Content</th>
+                    <th class="px-4 py-2 border-b text-left">სახელი</th>
+                    <th class="px-4 py-2 border-b text-left">გვარი</th>
+                    <th class="px-4 py-2 border-b text-left">სათაური</th>
+                    <th class="px-4 py-2 border-b text-left">აღწერა</th>
                 </tr>
             </thead>
             <tbody>
+                {% for post in posts %}
                 <tr class="hover:bg-gray-100">
-                    <td class="px-4 py-2 border-b">Malkhazi</td>
-                    <td class="px-4 py-2 border-b">Metlakhi</td>
-                    <td class="px-4 py-2 border-b">Aperist</td>
-                    <td class="px-4 py-2 border-b">Photo</td>
+                    <td class="px-4 py-2 border-b">{{ post.name }}</td>
+                    <td class="px-4 py-2 border-b">{{ post.surname }}</td>
+                    <td class="px-4 py-2 border-b">{{ post.title }}</td>
+                    <td class="px-4 py-2 border-b">{{ post.content }}</td>
                 </tr>
-                <tr class="hover:bg-gray-100">
-                    <td class="px-4 py-2 border-b">Kapelchik</td>
-                    <td class="px-4 py-2 border-b">The Eagles</td>
-                    <td class="px-4 py-2 border-b">1972</td>
-                    <td class="px-4 py-2 border-b">1972</td>
-                </tr>
-                <tr class="hover:bg-gray-100">
-                    <td class="px-4 py-2 border-b">Shining Star</td>
-                    <td class="px-4 py-2 border-b">Earth, Wind, and Fire</td>
-                    <td class="px-4 py-2 border-b">1975</td>
-                    <td class="px-4 py-2 border-b">1975</td>
-                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

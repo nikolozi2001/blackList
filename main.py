@@ -7,6 +7,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 from functools import wraps
+from flask_migrate import Migrate
 
 app = Flask(__name__)
 
@@ -18,6 +19,7 @@ app.config["SESSION_TYPE"] = "filesystem"  # Specify the session type
 Session(app)  # Initialize the session extension
 
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 
 class Users(db.Model):
@@ -27,6 +29,8 @@ class Users(db.Model):
     surname = db.Column(db.String(30), unique=False, nullable=False)
     username = db.Column(db.String(30), unique=True, nullable=False)
     password = db.Column(db.String(128), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False, nullable=False)
+    posts = db.relationship("Posts", backref="author", lazy=True)
 
     def __repr__(self):
         return f"Users('{self.name}', '{self.surname}', '{self.username}')"
@@ -35,12 +39,36 @@ class Users(db.Model):
 class Posts(db.Model):
     __tablename__ = "posts"
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(10), unique=False, nullable=False)
+    surname = db.Column(db.String(30), unique=False, nullable=False)
     title = db.Column(db.String(100), unique=False, nullable=False)
     content = db.Column(db.String(1000), unique=False, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     def __repr__(self):
         return f"Posts('{self.title}', '{self.content}')"
+
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "username" not in session:
+            flash("გთხოვთ ჯერ სისტემაში შეხვიდეთ.", "warning")
+            return redirect(url_for("login"))
+
+        user = Users.query.filter_by(username=session["username"]).first()
+
+        if user is None:
+            flash("მომხმარებელი არ მოიძებნა", "danger")
+            return redirect(url_for("home"))
+
+        if not user.is_admin:
+            flash("დაშვებული არ არის", "danger")
+            return redirect(url_for("home"))
+
+        return f(*args, **kwargs)
+
+    return decorated_function
 
 
 class LoginForm(FlaskForm):
@@ -62,6 +90,38 @@ class RegisterForm(FlaskForm):
         ],
     )
     submit = SubmitField("რეგისტრაცია")
+
+
+@app.route("/admin")
+@admin_required
+def admin():
+    users = Users.query.all()
+    posts = Posts.query.all()
+    return render_template(
+        "admin.html", users=users, posts=posts, navigation_items=navigation_items
+    )
+
+
+@app.route("/admin/delete_user/<int:user_id>")
+@admin_required
+def delete_user(user_id):
+    user = Users.query.get(user_id)
+    if user:
+        db.session.delete(user)
+        db.session.commit()
+        flash("მომხმარებელი წაშლილია", "success")
+    return redirect(url_for("admin"))
+
+
+@app.route("/admin/delete_post/<int:post_id>")
+@admin_required
+def delete_post(post_id):
+    post = Posts.query.get(post_id)
+    if post:
+        db.session.delete(post)
+        db.session.commit()
+        flash("პოსტი წაშლილია", "success")
+    return redirect(url_for("admin"))
 
 
 def login_required(f):
@@ -88,7 +148,10 @@ def about():
 @app.route("/workers")
 @login_required
 def workers():
-    return render_template("workers.html", navigation_items=navigation_items)
+    posts = Posts.query.all()  # Fetch all posts from the database
+    return render_template(
+        "workers.html", posts=posts, navigation_items=navigation_items
+    )
 
 
 @app.route("/login", methods=["GET", "POST"])

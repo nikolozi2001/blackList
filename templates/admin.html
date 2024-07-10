@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container mx-auto">
-    <h2 class="text-3xl font-bold text-center my-8">ადმინი პანელი</h2>
+    <h2 class="text-3xl font-bold text-center my-8">ადმინ პანელი</h2>
 
     <!-- Users Section -->
     <section class="mb-8">
@@ -24,10 +24,35 @@
                         <td class="py-2 px-4">{{ user.name }}</td>
                         <td class="py-2 px-4">{{ user.surname }}</td>
                         <td class="py-2 px-4">{{ user.username }}</td>
-                        <td class="py-2 px-4">
+                        <!-- <td class="py-2 px-4 flex space-x-2">
+                            <a href="{{ url_for('edit_user', user_id=user.id) }}"
+                                class="text-blue-600 hover:text-blue-800 px-2 py-1 rounded-md bg-blue-100 hover:bg-blue-200">რედაქტირება</a>
                             <a href="{{ url_for('delete_user', user_id=user.id) }}"
                                 class="text-red-600 hover:text-red-800 px-2 py-1 rounded-md bg-red-100 hover:bg-red-200">წაშლა</a>
+                        </td> -->
+                        <td class="py-2 px-4 flex space-x-2">
+                            <a href="{{ url_for('edit_user', user_id=user.id) }}"
+                                class="text-blue-600 hover:text-blue-800 px-2 py-1 rounded-md bg-blue-100 hover:bg-blue-200 flex items-center">
+                                რედაქტირება
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15.232 5.232l3.536 3.536M9 11l2 2 6.536-6.536a2 2 0 00-2.828-2.828L9 9l-2 2zm0 0v2a2 2 0 002 2h2m2 0h3m3 0a2 2 0 002-2v-3.5m0 0L21.768 7.232">
+                                    </path>
+                                </svg>
+                            </a>
+                            <a href="{{ url_for('delete_user', user_id=user.id) }}"
+                                class="text-red-600 hover:text-red-800 px-2 py-1 rounded-md bg-red-100 hover:bg-red-200 flex items-center">
+                                წაშლა
+                                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 7l-1.414-1.414L12 11.172 6.414 5.586 5 7l5.586 5.586L5 18.172l1.414 1.414L12 14.828l5.586 5.586L19 18.172l-5.586-5.586L19 7z">
+                                    </path>
+                                </svg>
+                            </a>
                         </td>
+
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -43,8 +68,10 @@
                 <thead class="bg-gray-200 text-left">
                     <tr>
                         <th class="py-2 px-4">ID</th>
+                        <th class="py-2 px-4">სახელი</th>
+                        <th class="py-2 px-4">გვარი</th>
                         <th class="py-2 px-4">სათაური</th>
-                        <th class="py-2 px-4">შინაარსი</th>
+                        <th class="py-2 px-4">აღწერა</th>
                         <th class="py-2 px-4">მომხმარებლის ID</th>
                         <th class="py-2 px-4">ქმედებები</th>
                     </tr>
@@ -53,10 +80,14 @@
                     {% for post in posts %}
                     <tr>
                         <td class="py-2 px-4">{{ post.id }}</td>
+                        <td class="py-2 px-4">{{ post.name }}</td>
+                        <td class="py-2 px-4">{{ post.surname }}</td>
                         <td class="py-2 px-4">{{ post.title }}</td>
                         <td class="py-2 px-4">{{ post.content }}</td>
                         <td class="py-2 px-4">{{ post.user_id }}</td>
-                        <td class="py-2 px-4">
+                        <td class="py-2 px-4 flex space-x-2">
+                            <a href="{{ url_for('edit_post', post_id=post.id) }}"
+                                class="text-blue-600 hover:text-blue-800 px-2 py-1 rounded-md bg-blue-100 hover:bg-blue-200">რედაქტირება</a>
                             <a href="{{ url_for('delete_post', post_id=post.id) }}"
                                 class="text-red-600 hover:text-red-800 px-2 py-1 rounded-md bg-red-100 hover:bg-red-200">წაშლა</a>
                         </td>

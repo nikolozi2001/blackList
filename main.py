@@ -4,7 +4,7 @@ from config import navigation_items
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 from functools import wraps
 from flask_migrate import Migrate
@@ -47,6 +47,21 @@ class Posts(db.Model):
 
     def __repr__(self):
         return f"Posts('{self.title}', '{self.content}')"
+
+
+class EditUserForm(FlaskForm):
+    name = StringField("სახელი", validators=[DataRequired()])
+    surname = StringField("გვარი", validators=[DataRequired()])
+    username = StringField("მომხმარებლის სახელი", validators=[DataRequired()])
+    submit = SubmitField("განახლება")
+
+
+class EditPostForm(FlaskForm):
+    name = StringField("სახელი", validators=[DataRequired()])
+    surname = StringField("გვარი", validators=[DataRequired()])
+    title = StringField("სათაური", validators=[DataRequired()])
+    content = TextAreaField("აღწერა", validators=[DataRequired()])
+    submit = SubmitField("რედაქტირება")
 
 
 def admin_required(f):
@@ -122,6 +137,41 @@ def delete_post(post_id):
         db.session.commit()
         flash("პოსტი წაშლილია", "success")
     return redirect(url_for("admin"))
+
+
+@app.route("/admin/edit_user/<int:user_id>", methods=["GET", "POST"])
+@admin_required
+def edit_user(user_id):
+    user = Users.query.get_or_404(user_id)
+    form = EditUserForm(obj=user)
+    if form.validate_on_submit():
+        user.name = form.name.data
+        user.surname = form.surname.data
+        user.username = form.username.data
+        db.session.commit()
+        flash("მომხმარებელი განახლებულია", "success")
+        return redirect(url_for("admin"))
+    return render_template(
+        "edit_user.html", form=form, navigation_items=navigation_items
+    )
+
+
+@app.route("/admin/edit_post/<int:post_id>", methods=["GET", "POST"])
+@admin_required
+def edit_post(post_id):
+    post = Posts.query.get_or_404(post_id)
+    form = EditPostForm(obj=post)
+    if form.validate_on_submit():
+        post.name = form.name.data
+        post.surname = form.surname.data
+        post.title = form.title.data
+        post.content = form.content.data
+        db.session.commit()
+        flash("პოსტი განახლებულია", "success")
+        return redirect(url_for("admin"))
+    return render_template(
+        "edit_post.html", form=form, navigation_items=navigation_items
+    )
 
 
 def login_required(f):

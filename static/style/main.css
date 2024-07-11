@@ -893,9 +893,18 @@ input[type="submit"] {
     width: 30%;
 }
 
+.submit_button {
+    width: 30%;
+}
+
 .w-100 {
     width: 100% !important;
     padding: 10px 20px !important;
+}
+
+.add_post_form {
+    display: flex;
+    flex-direction: row;
 }
 
 a {

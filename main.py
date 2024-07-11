@@ -49,6 +49,14 @@ class Posts(db.Model):
         return f"Posts('{self.title}', '{self.content}')"
 
 
+class PostForm(FlaskForm):
+    name = StringField("სახელი", validators=[DataRequired()])
+    surname = StringField("გვარი", validators=[DataRequired()])
+    title = StringField("სათაური", validators=[DataRequired()])
+    content = TextAreaField("აღწერა", validators=[DataRequired()])
+    submit = SubmitField("დამატება")
+
+
 class EditUserForm(FlaskForm):
     name = StringField("სახელი", validators=[DataRequired()])
     surname = StringField("გვარი", validators=[DataRequired()])
@@ -131,6 +139,17 @@ def admin():
     )
 
 
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if "username" not in session:
+            flash("გთხოვთ ჯერ სისტემაში შეხვიდეთ.", "warning")
+            return redirect(url_for("login"))
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
 @app.route("/admin/delete_user/<int:user_id>")
 @admin_required
 def delete_user(user_id):
@@ -142,15 +161,19 @@ def delete_user(user_id):
     return redirect(url_for("admin"))
 
 
-@app.route("/admin/delete_post/<int:post_id>")
-@admin_required
+@app.route("/workers/delete_post/<int:post_id>", methods=["POST"])
+@login_required
 def delete_post(post_id):
-    post = Posts.query.get(post_id)
-    if post:
-        db.session.delete(post)
-        db.session.commit()
-        flash("პოსტი წაშლილია", "success")
-    return redirect(url_for("admin"))
+    post = Posts.query.get_or_404(post_id)
+    user = Users.query.filter_by(username=session["username"]).first()
+    if post.author.id != user.id:
+        flash("თქვენ არ შეგიძლიათ ამ პოსტის წაშლა", "danger")
+        return redirect(url_for("workers"))
+
+    db.session.delete(post)
+    db.session.commit()
+    flash("პოსტი წაშლილია", "success")
+    return redirect(url_for("workers"))
 
 
 @app.route("/admin/edit_user/<int:user_id>", methods=["GET", "POST"])
@@ -188,17 +211,6 @@ def edit_post(post_id):
     )
 
 
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if "username" not in session:
-            flash("გთხოვთ ჯერ სისტემაში შეხვიდეთ.", "warning")
-            return redirect(url_for("login"))
-        return f(*args, **kwargs)
-
-    return decorated_function
-
-
 @app.route("/")
 def home():
     return render_template("index.html", navigation_items=navigation_items)
@@ -212,7 +224,25 @@ def about():
 @app.route("/workers", methods=["GET", "POST"])
 @login_required  # or any decorator you use to protect this route
 def workers():
+    form = PostForm()
     search_query = request.args.get("search")
+
+    if form.validate_on_submit():
+        user = Users.query.filter_by(
+            username=session["username"]
+        ).first()  # Assuming logged-in user
+        new_post = Posts(
+            name=form.name.data,
+            surname=form.surname.data,
+            title=form.title.data,
+            content=form.content.data,
+            user_id=user.id,
+        )
+        db.session.add(new_post)
+        db.session.commit()
+        flash("პოსტი წარმატებით დაემატა", "success")
+        return redirect(url_for("workers"))
+
     if search_query:
         posts = Posts.query.filter(
             (Posts.name.like(f"%{search_query}%"))
@@ -222,8 +252,9 @@ def workers():
         ).all()
     else:
         posts = Posts.query.all()
+
     return render_template(
-        "workers.html", posts=posts, navigation_items=navigation_items
+        "workers.html", posts=posts, form=form, navigation_items=navigation_items
     )
 
 

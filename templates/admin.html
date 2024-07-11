@@ -86,6 +86,7 @@
                 <thead class="bg-gray-200 text-left">
                     <tr>
                         <th class="py-2 px-4">ID</th>
+                        <th class="py-2 px-4">სურათი</th>
                         <th class="py-2 px-4">სახელი</th>
                         <th class="py-2 px-4">გვარი</th>
                         <th class="py-2 px-4">სათაური</th>
@@ -98,6 +99,14 @@
                     {% for post in posts %}
                     <tr>
                         <td class="py-2 px-4">{{ post.id }}</td>
+                        <td class="px-4 py-2 border-b">
+                            {% if post.photo %}
+                            <img src="{{ url_for('static', filename='uploads/' ~ post.photo) }}" alt="Post Photo"
+                                width="100">
+                            {% else %}
+                            No Photo
+                            {% endif %}
+                        </td>
                         <td class="py-2 px-4">{{ post.name }}</td>
                         <td class="py-2 px-4">{{ post.surname }}</td>
                         <td class="py-2 px-4">{{ post.title }}</td>

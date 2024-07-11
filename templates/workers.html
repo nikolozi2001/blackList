@@ -22,7 +22,7 @@
 
     <!-- Add Post Form -->
     <div class="mb-4">
-        <form method="POST" action="{{ url_for('workers') }}" class="add_post_form">
+        <form method="POST" action="{{ url_for('workers') }}" class="add_post_form" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             <div class="pr-4">
                 {{ form.name.label(class="block text-gray-700 text-sm font-bold mb-2") }}
@@ -44,6 +44,11 @@
                 {{ form.content(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700
                 leading-tight focus:outline-none focus:shadow-outline") }}
             </div>
+            <div class="pr-4">
+                {{ form.photo.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+                {{ form.photo(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight
+                focus:outline-none focus:shadow-outline") }}
+            </div>
             <div class="flex items-center justify-between submit_button">
                 {{ form.submit(class="bg-blue-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded
                 focus:outline-none focus:shadow-outline") }}
@@ -60,6 +65,7 @@
                     <th class="px-4 py-2 border-b text-left">გვარი</th>
                     <th class="px-4 py-2 border-b text-left">სათაური</th>
                     <th class="px-4 py-2 border-b text-left">აღწერა</th>
+                    <th class="px-4 py-2 border-b text-left">ფოტო</th>
                     <th class="px-4 py-2 border-b text-left">ავტორი</th>
                     <th class="px-4 py-2 border-b text-left">ქმედებები</th>
                 </tr>
@@ -67,13 +73,21 @@
             <tbody>
                 {% for post in posts %}
                 <tr class="hover:bg-gray-100">
+                    <td class="px-4 py-2 border-b">
+                        {% if post.photo %}
+                        <img src="{{ url_for('static', filename='uploads/' ~ post.photo) }}" class="post-image" alt="Post Photo"
+                            width="100">
+                        {% else %}
+                        No Photo
+                        {% endif %}
+                    </td>
                     <td class="px-4 py-2 border-b">{{ post.name }}</td>
                     <td class="px-4 py-2 border-b">{{ post.surname }}</td>
                     <td class="px-4 py-2 border-b">{{ post.title }}</td>
                     <td class="px-4 py-2 border-b">{{ post.content }}</td>
                     <td class="px-4 py-2 border-b">{{ post.author.username }}</td>
                     <td class="px-4 py-2 border-b">
-                        {% if post.author.username == session['username'] %}
+                        {% if post.author.username == session['username'] or session.get('is_admin') %}
                         <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}">
                             <button type="submit"
                                 class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">წაშლა</button>

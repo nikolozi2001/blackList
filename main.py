@@ -8,6 +8,9 @@ from wtforms import StringField, PasswordField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 from functools import wraps
 from flask_migrate import Migrate
+from flask_wtf.file import FileField, FileAllowed
+import os
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -43,6 +46,7 @@ class Posts(db.Model):
     surname = db.Column(db.String(30), unique=False, nullable=False)
     title = db.Column(db.String(100), unique=False, nullable=False)
     content = db.Column(db.String(1000), unique=False, nullable=False)
+    photo = db.Column(db.String(100), nullable=True)  # New column for photo
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     def __repr__(self):
@@ -54,6 +58,7 @@ class PostForm(FlaskForm):
     surname = StringField("გვარი", validators=[DataRequired()])
     title = StringField("სათაური", validators=[DataRequired()])
     content = TextAreaField("აღწერა", validators=[DataRequired()])
+    photo = FileField("ფოტო", validators=[FileAllowed(['jpg', 'png'])])
     submit = SubmitField("დამატება")
 
 
@@ -166,7 +171,7 @@ def delete_user(user_id):
 def delete_post(post_id):
     post = Posts.query.get_or_404(post_id)
     user = Users.query.filter_by(username=session["username"]).first()
-    if post.author.id != user.id:
+    if post.author.id != user.id and not user.is_admin:
         flash("თქვენ არ შეგიძლიათ ამ პოსტის წაშლა", "danger")
         return redirect(url_for("workers"))
 
@@ -221,6 +226,10 @@ def about():
     return render_template("about.html", navigation_items=navigation_items)
 
 
+# Set the folder to save uploaded files
+app.config['UPLOAD_FOLDER'] = 'static/uploads'
+
+
 @app.route("/workers", methods=["GET", "POST"])
 @login_required  # or any decorator you use to protect this route
 def workers():
@@ -229,13 +238,21 @@ def workers():
 
     if form.validate_on_submit():
         user = Users.query.filter_by(
-            username=session["username"]
-        ).first()  # Assuming logged-in user
+            username=session["username"]).first()  # Assuming logged-in user
+        if form.photo.data:
+            photo_file = form.photo.data
+            photo_filename = secure_filename(photo_file.filename)
+            photo_file.save(os.path.join(
+                app.config['UPLOAD_FOLDER'], photo_filename))
+        else:
+            photo_filename = None
+
         new_post = Posts(
             name=form.name.data,
             surname=form.surname.data,
             title=form.title.data,
             content=form.content.data,
+            photo=photo_filename,  # Save the photo filename to the database
             user_id=user.id,
         )
         db.session.add(new_post)
@@ -253,9 +270,7 @@ def workers():
     else:
         posts = Posts.query.all()
 
-    return render_template(
-        "workers.html", posts=posts, form=form, navigation_items=navigation_items
-    )
+    return render_template("workers.html", posts=posts, form=form, navigation_items=navigation_items)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -267,6 +282,7 @@ def login():
         user = Users.query.filter_by(username=username).first()
         if user and check_password_hash(user.password, password):
             session["username"] = username
+            session["is_admin"] = user.is_admin
             return redirect(url_for("home"))
         else:
             flash("მომხმარებლის სახელი ან პაროლი არასწორია", "danger")
@@ -294,7 +310,8 @@ def register():
             )
             db.session.add(new_user)
             db.session.commit()
-            flash(f"დარეგისტრირებულია ახალი მომხმარებელი: {username}", "success")
+            flash(
+                f"დარეგისტრირებულია ახალი მომხმარებელი: {username}", "success")
             return redirect(url_for("login"))
     return render_template(
         "register.html", navigation_items=navigation_items, form=form

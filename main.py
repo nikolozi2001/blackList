@@ -107,11 +107,25 @@ class RegisterForm(FlaskForm):
     submit = SubmitField("რეგისტრაცია")
 
 
-@app.route("/admin")
+@app.route("/admin", methods=["GET", "POST"])
 @admin_required
 def admin():
-    users = Users.query.all()
-    posts = Posts.query.all()
+    search_query = request.args.get("search")
+    if search_query:
+        users = Users.query.filter(
+            (Users.name.like(f"%{search_query}%"))
+            | (Users.surname.like(f"%{search_query}%"))
+            | (Users.username.like(f"%{search_query}%"))
+        ).all()
+        posts = Posts.query.filter(
+            (Posts.name.like(f"%{search_query}%"))
+            | (Posts.surname.like(f"%{search_query}%"))
+            | (Posts.title.like(f"%{search_query}%"))
+            | (Posts.content.like(f"%{search_query}%"))
+        ).all()
+    else:
+        users = Users.query.all()
+        posts = Posts.query.all()
     return render_template(
         "admin.html", users=users, posts=posts, navigation_items=navigation_items
     )
@@ -195,10 +209,19 @@ def about():
     return render_template("about.html", navigation_items=navigation_items)
 
 
-@app.route("/workers")
-@login_required
+@app.route("/workers", methods=["GET", "POST"])
+@login_required  # or any decorator you use to protect this route
 def workers():
-    posts = Posts.query.all()  # Fetch all posts from the database
+    search_query = request.args.get("search")
+    if search_query:
+        posts = Posts.query.filter(
+            (Posts.name.like(f"%{search_query}%"))
+            | (Posts.surname.like(f"%{search_query}%"))
+            | (Posts.title.like(f"%{search_query}%"))
+            | (Posts.content.like(f"%{search_query}%"))
+        ).all()
+    else:
+        posts = Posts.query.all()
     return render_template(
         "workers.html", posts=posts, navigation_items=navigation_items
     )

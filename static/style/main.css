@@ -674,7 +674,7 @@ img {
     vertical-align: middle;
 }
 
-.post-image {
+/* .post-image {
     width: 100px;
     height: auto;
     transition: transform 0.3s ease-in-out;
@@ -686,11 +686,7 @@ img {
     width: 40%;
     position: absolute;
     right: 50%;
-    /* transform: scale(2); */
-    /* transform-origin: center; */
-    /* margin-bottom: 10vh; */
-    /* top: 50%; */
-}
+} */
 
 /* Slideshow container */
 .slideshow-container {

@@ -61,11 +61,12 @@
         <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
             <thead>
                 <tr class="bg-gray-200 text-gray-700">
+                    <th class="px-4 py-2 border-b text-left"></th>
+                    <th class="px-4 py-2 border-b text-left">ფოტო</th>
                     <th class="px-4 py-2 border-b text-left">სახელი</th>
                     <th class="px-4 py-2 border-b text-left">გვარი</th>
                     <th class="px-4 py-2 border-b text-left">სათაური</th>
                     <th class="px-4 py-2 border-b text-left">აღწერა</th>
-                    <th class="px-4 py-2 border-b text-left">ფოტო</th>
                     <th class="px-4 py-2 border-b text-left">ავტორი</th>
                     <th class="px-4 py-2 border-b text-left">ქმედებები</th>
                 </tr>
@@ -74,9 +75,13 @@
                 {% for post in posts %}
                 <tr class="hover:bg-gray-100">
                     <td class="px-4 py-2 border-b">
+                        <a href="{{ url_for('view_post', post_id=post.id) }}"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">ნახვა</a>
+                    </td>
+                    <td class="px-4 py-2 border-b">
                         {% if post.photo %}
-                        <img src="{{ url_for('static', filename='uploads/' ~ post.photo) }}" class="post-image" alt="Post Photo"
-                            width="100">
+                        <img src="{{ url_for('static', filename='uploads/' ~ post.photo) }}" class="post-image"
+                            alt="Post Photo" width="100">
                         {% else %}
                         No Photo
                         {% endif %}

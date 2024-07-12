@@ -58,7 +58,7 @@ class PostForm(FlaskForm):
     surname = StringField("გვარი", validators=[DataRequired()])
     title = StringField("სათაური", validators=[DataRequired()])
     content = TextAreaField("აღწერა", validators=[DataRequired()])
-    photo = FileField("ფოტო", validators=[FileAllowed(['jpg', 'png'])])
+    photo = FileField("ფოტო", validators=[FileAllowed(["jpg", "png"])])
     submit = SubmitField("დამატება")
 
 
@@ -216,6 +216,14 @@ def edit_post(post_id):
     )
 
 
+@app.route("/view_post/<int:post_id>")
+def view_post(post_id):
+    post = Posts.query.get_or_404(post_id)
+    return render_template(
+        "view_post.html", post=post, navigation_items=navigation_items
+    )
+
+
 @app.route("/")
 def home():
     return render_template("index.html", navigation_items=navigation_items)
@@ -227,7 +235,7 @@ def about():
 
 
 # Set the folder to save uploaded files
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.config["UPLOAD_FOLDER"] = "static/uploads"
 
 
 @app.route("/workers", methods=["GET", "POST"])
@@ -238,12 +246,12 @@ def workers():
 
     if form.validate_on_submit():
         user = Users.query.filter_by(
-            username=session["username"]).first()  # Assuming logged-in user
+            username=session["username"]
+        ).first()  # Assuming logged-in user
         if form.photo.data:
             photo_file = form.photo.data
             photo_filename = secure_filename(photo_file.filename)
-            photo_file.save(os.path.join(
-                app.config['UPLOAD_FOLDER'], photo_filename))
+            photo_file.save(os.path.join(app.config["UPLOAD_FOLDER"], photo_filename))
         else:
             photo_filename = None
 
@@ -270,7 +278,9 @@ def workers():
     else:
         posts = Posts.query.all()
 
-    return render_template("workers.html", posts=posts, form=form, navigation_items=navigation_items)
+    return render_template(
+        "workers.html", posts=posts, form=form, navigation_items=navigation_items
+    )
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -310,8 +320,7 @@ def register():
             )
             db.session.add(new_user)
             db.session.commit()
-            flash(
-                f"დარეგისტრირებულია ახალი მომხმარებელი: {username}", "success")
+            flash(f"დარეგისტრირებულია ახალი მომხმარებელი: {username}", "success")
             return redirect(url_for("login"))
     return render_template(
         "register.html", navigation_items=navigation_items, form=form

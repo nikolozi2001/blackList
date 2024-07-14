@@ -58,7 +58,7 @@ class PostForm(FlaskForm):
     surname = StringField("გვარი", validators=[DataRequired()])
     title = StringField("სათაური", validators=[DataRequired()])
     content = TextAreaField("აღწერა", validators=[DataRequired()])
-    photo = FileField("ფოტო", validators=[FileAllowed(["jpg", "png"])])
+    photo = FileField("ფოტო", validators=[FileAllowed(["jpg", "png", "jpeg"])])
     submit = SubmitField("დამატება")
 
 
@@ -216,6 +216,17 @@ def edit_post(post_id):
     )
 
 
+@app.route("/admin/delete_post/<int:post_id>", methods=["POST"])
+@admin_required
+def delete_post_admin(post_id):
+    post = Posts.query.get_or_404(post_id)
+    if post:
+        db.session.delete(post)
+        db.session.commit()
+        flash("პოსტი წაშლილია", "success")
+    return redirect(url_for("admin"))
+
+
 @app.route("/view_post/<int:post_id>")
 def view_post(post_id):
     post = Posts.query.get_or_404(post_id)
@@ -251,7 +262,8 @@ def workers():
         if form.photo.data:
             photo_file = form.photo.data
             photo_filename = secure_filename(photo_file.filename)
-            photo_file.save(os.path.join(app.config["UPLOAD_FOLDER"], photo_filename))
+            photo_file.save(os.path.join(
+                app.config["UPLOAD_FOLDER"], photo_filename))
         else:
             photo_filename = None
 
@@ -320,7 +332,8 @@ def register():
             )
             db.session.add(new_user)
             db.session.commit()
-            flash(f"დარეგისტრირებულია ახალი მომხმარებელი: {username}", "success")
+            flash(
+                f"დარეგისტრირებულია ახალი მომხმარებელი: {username}", "success")
             return redirect(url_for("login"))
     return render_template(
         "register.html", navigation_items=navigation_items, form=form

@@ -111,12 +111,14 @@
                         <td class="py-2 px-4">{{ post.surname }}</td>
                         <td class="py-2 px-4">{{ post.title }}</td>
                         <td class="py-2 px-4">{{ post.content }}</td>
-                        <td class="py-2 px-4">{{ post.user_id }}</td>
+                        <td class="py-2 px-4">{{ post.author.username }}</td>
                         <td class="py-2 px-4 flex space-x-2">
                             <a href="{{ url_for('edit_post', post_id=post.id) }}"
                                 class="text-blue-600 hover:text-blue-800 px-2 py-1 rounded-md bg-blue-100 hover:bg-blue-200">რედაქტირება</a>
-                            <a href="{{ url_for('delete_post', post_id=post.id) }}"
-                                class="text-red-600 hover:text-red-800 px-2 py-1 rounded-md bg-red-100 hover:bg-red-200">წაშლა</a>
+                            <form method="POST" action="{{ url_for('delete_post_admin', post_id=post.id) }}">
+                                <button type="submit"
+                                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">წაშლა</button>
+                            </form>
                         </td>
                     </tr>
                     {% endfor %}

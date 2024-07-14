@@ -11,6 +11,8 @@ from flask_migrate import Migrate
 from flask_wtf.file import FileField, FileAllowed
 import os
 from werkzeug.utils import secure_filename
+import uuid
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -261,7 +263,11 @@ def workers():
         ).first()  # Assuming logged-in user
         if form.photo.data:
             photo_file = form.photo.data
-            photo_filename = secure_filename(photo_file.filename)
+            # Generate a unique filename using UUID and current timestamp
+            unique_id = str(uuid.uuid4())
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            photo_filename = secure_filename(
+                f"{unique_id}_{timestamp}_{photo_file.filename}")
             photo_file.save(os.path.join(
                 app.config["UPLOAD_FOLDER"], photo_filename))
         else:

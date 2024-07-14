@@ -13,6 +13,7 @@ import os
 from werkzeug.utils import secure_filename
 import uuid
 from datetime import datetime
+from sqlalchemy import or_
 
 app = Flask(__name__)
 
@@ -50,9 +51,10 @@ class Posts(db.Model):
     content = db.Column(db.String(1000), unique=False, nullable=False)
     photo = db.Column(db.String(100), nullable=True)  # New column for photo
     user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
-        return f"Posts('{self.title}', '{self.content}')"
+        return f"Posts('{self.title}', '{self.content}', '{self.date}')"
 
 
 class PostForm(FlaskForm):
@@ -256,6 +258,8 @@ app.config["UPLOAD_FOLDER"] = "static/uploads"
 def workers():
     form = PostForm()
     search_query = request.args.get("search")
+    order_by = request.args.get(
+        "order_by", "date_desc")
 
     if form.validate_on_submit():
         user = Users.query.filter_by(
@@ -286,15 +290,24 @@ def workers():
         flash("პოსტი წარმატებით დაემატა", "success")
         return redirect(url_for("workers"))
 
+    query = Posts.query
+
     if search_query:
-        posts = Posts.query.filter(
-            (Posts.name.like(f"%{search_query}%"))
-            | (Posts.surname.like(f"%{search_query}%"))
-            | (Posts.title.like(f"%{search_query}%"))
-            | (Posts.content.like(f"%{search_query}%"))
-        ).all()
+        query = query.filter(
+            or_(
+                Posts.name.like(f"%{search_query}%"),
+                Posts.surname.like(f"%{search_query}%"),
+                Posts.title.like(f"%{search_query}%"),
+                Posts.content.like(f"%{search_query}%")
+            )
+        )
+
+    if order_by == "date_asc":
+        posts = query.order_by(Posts.date.asc()).all()
+    elif order_by == "date_desc":
+        posts = query.order_by(Posts.date.desc()).all()
     else:
-        posts = Posts.query.all()
+        posts = query.all()
 
     return render_template(
         "workers.html", posts=posts, form=form, navigation_items=navigation_items

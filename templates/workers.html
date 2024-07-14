@@ -7,6 +7,11 @@
         <form method="GET" action="{{ url_for('workers') }}" class="flex justify-center">
             <input type="text" name="search" placeholder="ძებნა..."
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <select name="order_by"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-2">
+                <option value="date_desc">თარიღი (კლებადი)</option>
+                <option value="date_asc">თარიღი (ზრდადი)</option>
+            </select>
             <button type="submit"
                 class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline ml-2">
                 ძებნა

@@ -1,0 +1,13 @@
+@media screen and (max-width: 390px) {
+    .add_post_form {
+        flex-direction: column;
+    }
+
+    input[type="submit"] {
+        width: 100%;
+    }
+
+    .post_table {
+        flex-direction: column;
+    }
+}

@@ -4,11 +4,11 @@
 <div class="container mx-auto p-4">
     <!-- Search Form -->
     <div class="mb-4">
-        <form method="GET" action="{{ url_for('workers') }}" class="flex justify-center">
+        <form method="GET" action="{{ url_for('workers') }}" class="flex justify-center items-center">
             <input type="text" name="search" placeholder="ძებნა..."
                 class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             <select name="order_by"
-                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ml-2">
+                class="shadow appearance-none border rounded ml-2 py-2 px-3 mb-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-48">
                 <option value="date_desc">თარიღი (კლებადი)</option>
                 <option value="date_asc">თარიღი (ზრდადი)</option>
             </select>
@@ -63,7 +63,7 @@
 
     <!-- Posts Table -->
     <div class="overflow-x-auto">
-        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md hidden lg:table">
             <thead>
                 <tr class="bg-gray-200 text-gray-700">
                     <th class="px-4 py-2 border-b text-left"></th>
@@ -108,6 +108,42 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        <!-- Responsive Cards for Small Screens -->
+        <div class="block lg:hidden">
+            {% for post in posts %}
+            <div class="bg-white border border-gray-200 rounded-lg shadow-md mb-4 p-4">
+                <div class="mb-2">
+                    {% if post.photo %}
+                    <img src="{{ url_for('static', filename='uploads/' ~ post.photo) }}" class="post-image"
+                        alt="Post Photo" width="100">
+                    {% else %}
+                    No Photo
+                    {% endif %}
+                </div>
+                <div class="mb-2"><strong>სახელი:</strong> {{ post.name }}</div>
+                <div class="mb-2"><strong>გვარი:</strong> {{ post.surname }}</div>
+                <div class="mb-2"><strong>სათაური:</strong> {{ post.title }}</div>
+                <div class="mb-2"><strong>აღწერა:</strong> {{ post.content }}</div>
+                <div class="mb-2"><strong>ავტორი:</strong> {{ post.author.username }}</div>
+                <div class="flex justify-between">
+                    <div class="mb-2">
+                        <a href="{{ url_for('view_post', post_id=post.id) }}"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-3 rounded">ნახვა</a>
+                    </div>
+                    <div>
+                        {% if post.author.username == session['username'] or session.get('is_admin') %}
+                        <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}">
+                            <button type="submit"
+                                class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-3 rounded">წაშლა</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
+
 </div>
 {% endblock %}

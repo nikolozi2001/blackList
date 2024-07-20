@@ -5,57 +5,60 @@
 
 <div class="container mx-auto p-4">
     <div class="bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold mb-4 text-gray-800">About Our Company</h2>
+        <h2 class="text-2xl font-bold mb-4 text-gray-800">ჩვენ შესახებ</h2>
 
         <div class="flex items-center justify-center mb-6">
-            <img src="{{ url_for('static', filename='../static/images/logo.png') }}" alt="Company Logo" class="h-20 w-auto">
+            <img src="{{ url_for('static', filename='../static/images/logo.png') }}" alt="Company Logo"
+                class="h-20 w-auto">
         </div>
 
         <p class="text-gray-700 leading-relaxed">
-            Welcome to Our Company, where we strive to deliver excellence in everything we do. Lorem ipsum dolor sit
-            amet, consectetur adipiscing elit. Nulla condimentum augue justo, eget consectetur ex sagittis a. Nulla
-            facilisi. Nunc nec finibus nisl. Aliquam bibendum pharetra felis, in lacinia ipsum vehicula nec. Proin eu
-            odio et nisl elementum congue. Duis vitae neque erat. Aenean quis neque ligula. Fusce id elementum magna, in
-            pretium urna. Aliquam erat volutpat. Sed eu tempor lectus. Sed vel purus vitae nunc facilisis sollicitudin.
-            Nullam a augue non dui rhoncus dapibus id sed libero.
+            ჯგუფი "ხელოსნების შავი სია - Blacklist of Craftsmen" არის დამოუკიდებელი, მიუკერძოებული ჯგუფი, რომელშიც
+            თავმოყრილია ყველა არაპროფესიონალის, თაღლითის, უპასუხისმგებლო იურიდიული თუ ფიზიკური პირის შესახებ ინფორმაცია,
+            რომელიც
+            დაკავშირებულია მშენებლობა-რემონტთან და ასევე ინტერიერის მომწყობი პირების და აქსესუარების რეალიზატორებთან.
+            ინფორმაციას ვაგროვებთ ასევე ყალბ რეკომენდატორებზე, თაღლით დამლაგებლებზე.
         </p>
 
         <p class="text-gray-700 leading-relaxed mt-4">
-            Vestibulum eu consectetur libero. Proin et semper neque, nec dictum mi. Pellentesque habitant morbi
-            tristique senectus et netus et malesuada fames ac turpis egestas. Donec sed risus non augue vehicula
-            tincidunt. Duis at dui sed nunc consectetur tempus. Nam sem metus, volutpat a feugiat sit amet, fringilla
-            vel erat. Quisque sodales turpis nec eros varius, non fermentum risus sagittis. Cras imperdiet, dui ut
-            dapibus aliquet, elit dui elementum lectus, id feugiat felis neque id elit. Fusce elementum convallis
-            lectus, at convallis lectus ultricies id. Nulla vel aliquam sapien, ac blandit tellus. Vivamus in mi quis
-            lorem auctor eleifend. Nam non lorem vel arcu ultricies gravida. Donec eget dui id lectus volutpat sodales.
-            Nullam sagittis, nulla ac malesuada mattis, dui urna suscipit enim, et consectetur sapien justo non enim.
+            ჩვენი ჯგუფი დაგეხმარებათ თავი აარიდოთ თაღლითებისგან მოყენებულ ზარალს - დიდ, გაუთვალისწინებელ ხარჯებს და
+            ასევე მიიღოთ რჩევები - გამოიჩინოთ სიფრთხილე რეკომენდატორების გადამოწმებაში, დაგეხმარებით დროულად მოგაწოდოთ
+            თქვენთვის უცნობი, საფრთხის შემცველი ადამიანების შესახებ ინფორმაცია.
         </p>
 
-        <div class="mt-6">
+        <p class="text-gray-700 landing-relaxed mt-4">
+            გთხოვთ თქვენს მიერ დადებულ პოსტში მაქსიმალურად დეტალურად ასახოთ ინფორმაცია - თაღლითის სახელის, გვარის,
+            საკონტაქტო ინფორმაციის მითითებით და სასურველია ფოტოსაც თუ გამოაქვეყნებთ.
+            ერთად ვებრძოლოთ თაღლითებს ✊
+        </p>
+
+        <p class="text-gray-700 landing-relaxed mt-4">
+            ასევე მოვისმენთ, როგორც დაზარალებულის, ასევე მეორე მხარის დაცვით არგუმენტებსაც. (რათქმა უნდა, თუ სურვილი
+            ექნება)
+        </p>
+
+        <p class="text-gray-700 leading-relaxed mt-4">
+            გამომდინარე იქიდან, რომ ეს ჯგუფი მხოლოდ საინფორმაციო და საქველმოქმედო ხასიათს ატარებს, ჯგუფის
+            ადმინისტრაცია პასუხს არ აგებს პოსტებში გადმოცემული ინფორმაციის უტყუარობაზე, თუმცა მოდერაციამდე
+            მაქსიმალურად ხორციელდება ინფორმაციის გადამოწმება.
+        </p>
+
+        <!-- <div class="mt-6">
             <h3 class="text-xl font-semibold mb-2 text-gray-800">Our Mission</h3>
             <p class="text-gray-700 leading-relaxed">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla condimentum augue justo, eget consectetur
-                ex sagittis a. Nulla facilisi. Nunc nec finibus nisl. Aliquam bibendum pharetra felis, in lacinia ipsum
-                vehicula nec. Proin eu odio et nisl elementum congue. Duis vitae neque erat. Aenean quis neque ligula.
-                Fusce id elementum magna, in pretium urna. Aliquam erat volutpat. Sed eu tempor lectus. Sed vel purus
-                vitae nunc facilisis sollicitudin.
+                ასევე მოვისმენთ, როგორც დაზარალებულის, ასევე მეორე მხარის დაცვით არგუმენტებსაც. (რათქმა უნდა, თუ სურვილი
+                ექნება)
             </p>
-        </div>
+        </div> -->
 
-        <div class="mt-6">
+        <!-- <div class="mt-6">
             <h3 class="text-xl font-semibold mb-2 text-gray-800">Our Vision</h3>
             <p class="text-gray-700 leading-relaxed">
-                Vestibulum eu consectetur libero. Proin et semper neque, nec dictum mi. Pellentesque habitant morbi
-                tristique senectus et netus et malesuada fames ac turpis egestas. Donec sed risus non augue vehicula
-                tincidunt. Duis at dui sed nunc consectetur tempus. Nam sem metus, volutpat a feugiat sit amet,
-                fringilla vel erat. Quisque sodales turpis nec eros varius, non fermentum risus sagittis. Cras
-                imperdiet, dui ut dapibus aliquet, elit dui elementum lectus, id feugiat felis neque id elit. Fusce
-                elementum convallis lectus, at convallis lectus ultricies id. Nulla vel aliquam sapien, ac blandit
-                tellus. Vivamus in mi quis lorem auctor eleifend. Nam non lorem vel arcu ultricies gravida. Donec eget
-                dui id lectus volutpat sodales. Nullam sagittis, nulla ac malesuada mattis, dui urna suscipit enim, et
-                consectetur sapien justo non enim.
+                გამომდინარე იქიდან, რომ ეს ჯგუფი მხოლოდ საინფორმაციო და საქველმოქმედო ხასიათს ატარებს, ჯგუფის
+                ადმინისტრაცია პასუხს არ აგებს პოსტებში გადმოცემული ინფორმაციის უტყუარობაზე, თუმცა მოდერაციამდე
+                მაქსიმალურად ხორციელდება ინფორმაციის გადამოწმება.
             </p>
-        </div>
+        </div> -->
     </div>
 </div>
 
